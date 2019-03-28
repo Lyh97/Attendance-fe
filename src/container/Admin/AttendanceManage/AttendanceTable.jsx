@@ -1,35 +1,14 @@
 import React from 'react';
-import { Table, Input, Button, Icon, Tag } from 'antd';
+import { Table, Input, Button, Icon, Tag, Popconfirm, message } from 'antd';
 import Highlighter from 'react-highlight-words';
-
-const data = [{
-    id: '1001',
-    name: 'John Brown',
-    date: '2018-12-12',
-    status: '签到成功',
-  }, {
-    id: '1002',
-    name: 'Joe Black',
-    date: '2018-12-13',
-    status: '签到成功',
-  }, {
-    id: '1003',
-    name: 'Jim Green',
-    date: '2018-12-14',
-    status: '签到成功',
-  }, {
-    id: '1004',
-    name: 'Jim Red',
-    date: '2018-12-15',
-    status: '签到成功',
-  }
-];
+import axios from 'axios';
 
 class AttendanceTable extends React.Component{
     constructor(prop) {
         super(prop);
         this.state = {
             searchText: '',
+            data: []
         }
     }
 
@@ -78,49 +57,82 @@ class AttendanceTable extends React.Component{
         this.setState({ searchText: '' });
     }
 
+    rejectAttendance(params, status) {
+        axios.get('http://localhost:5002/updateAttendanceStatusById',
+        { params: { id:params.id, status: status }}).then((response) => {
+            if(response.data.status === 200) {
+                if(status === 'success')
+                    message.success('驳回成功', 3);
+                else
+                    message.success('恢复成功', 3);
+                this.props.initData();
+            }
+        })
+    }
+
     render() {
         const columns = [
         {
             title: '员工号',
-            dataIndex: 'id',
-            key: 'id',
+            dataIndex: 'user_id',
+            key: 'user_id',
             width: '25%',
-            ...this.getColumnSearchProps('id'),
+            ...this.getColumnSearchProps('user_id'),
         }, 
           {
             title: '姓名',
-            dataIndex: 'name',
-            key: 'name',
+            dataIndex: 'user_name',
+            key: 'user_name',
             width: '25%',
-            ...this.getColumnSearchProps('name'),
+            ...this.getColumnSearchProps('user_name'),
           }, {
             title: '打卡时间',
-            dataIndex: 'date',
-            key: 'date',
+            dataIndex: 'attendance_time',
+            key: 'attendance_time',
             width: '25%',
             defaultSortOrder: 'descend',
-            sorter: (a, b) => new Date(a.date)>(b.date)? 1:-1,
+            sorter: (a, b) => new Date(a.attendance_time)>(b.attendance_time)? 1:-1,
           }, {
             title: '打卡状态',
-            dataIndex: 'status',
+            dataIndex: 'attendance_status',
             filters: [{
-                text: 'Yes',
-                value: '签到成功',
+                text: '签到成功',
+                value: 'success',
             }, {
-                text: 'No',
-                value: 'Error',
+                text: '签到失败',
+                value: 'fail',
             }],
-            key: 'status',
-            onFilter: (value, record) => record.status.indexOf(value) === 0,
-            render: status => (
+            key: 'attendance_status',
+            onFilter: (value, record) => record.attendance_status.indexOf(value) === 0,
+            render: attendance_status => (
                 <span>
-                    <Tag color={'green'} key={status}>{status.toUpperCase()}</Tag>
+                    <Tag color={attendance_status==='success'?'green':'red'} key={attendance_status}>{attendance_status.toUpperCase()}</Tag>
                 </span>
             )
-          }
+          }, {
+            title: 'Action',
+            key: 'operation',
+            fixed: 'right',
+            width: 150,
+            render: (text, record) => (
+                record.attendance_status === 'success'? (
+                    <div>
+                        {/* <Button type="primary" size="small" style={{ marginRight: '10px'}}>编辑</Button> */}
+                        <Popconfirm title="确定要驳回?" onConfirm={() => this.rejectAttendance(record, 'fail')}>
+                            <Button type="danger" size="small">驳回</Button>
+                        </Popconfirm>
+                    </div>
+                ): (
+                    <div>
+                        {/* <Button type="primary" size="small" style={{ marginRight: '10px'}}>编辑</Button> */}
+                        <Button type="primary" onClick={() => this.rejectAttendance(record, 'success')} size="small">恢复</Button>
+                    </div>
+                )
+            )
+          },
         ];
         return (
-            <Table columns={columns} dataSource={data} size="small" />
+            <Table columns={columns} dataSource={this.props.tableData} size="small" scroll={{ x: 1000 }} />
         )
     }
 }

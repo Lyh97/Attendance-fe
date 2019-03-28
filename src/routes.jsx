@@ -4,6 +4,10 @@ import attendance from './container/User/Attendance';
 import publicity from './container/User/Publicity';
 import userInfo from './container/User/UserInfo';
 
+import attendanceManage from './container/Admin/AttendanceManage';
+import publicityManage from './container/Admin/PublictyManage';
+import userInfoManage from './container/Admin/UsersManage';
+
 // const requireAuth = (nextState, replace) => {
 //     if(!sessionStorage.getItem('userid')) {
 //         let url = window.location.hash;
@@ -30,6 +34,9 @@ export default (
       <Route path="/attendance" component={attendance}/>
       <Route path="/publicity" component={publicity}/>
       <Route path="/userInfo" component={userInfo}/>
+      <Route path="/attendancemanage" component={attendanceManage}/>
+      <Route path="/publicitymanage" component={publicityManage}/>
+      <Route path="/userInfomanage" component={userInfoManage}/>
 	</Router>
 );
 

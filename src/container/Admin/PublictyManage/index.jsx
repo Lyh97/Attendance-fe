@@ -5,7 +5,7 @@ import 'braft-editor/dist/index.css'
 import { Input, Button } from 'antd'
 import './index.less'
 
-class Publicity extends React.Component {
+class PublicityManage extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
@@ -38,9 +38,27 @@ class Publicity extends React.Component {
     render () {
         return (
           <React.Fragment>
-            <h3 style={{ margin:"10px", fontWeight:600}}>公示信息</h3>
+            <h3 style={{ margin:"10px", fontWeight:600}}>添加公示</h3>
+            <div className='publicty_body'>
+                <div className={'public_title'}>
+                    <h4>标题:</h4>
+                    <Input placeholder="Publicty Title" />
+                </div>
+                <div className={'editor_class'}>
+                    <h4>内容:</h4>
+                    <BraftEditor
+                        className= {"editor_body"}
+                        value={this.state.editorState}
+                        onChange={this.handleEditorChange}
+                        onSave={this.submitContent} />
+                </div>
+            </div>
+            <div className={"operation_buttons"}>
+                <Button type="primary">发布</Button>
+                <Button type="danger">保存</Button>
+            </div>
           </React.Fragment>
         )
     }
 }
-export default Publicity;
+export default PublicityManage;
