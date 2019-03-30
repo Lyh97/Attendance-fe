@@ -43,7 +43,7 @@ class AttendanceSider extends React.Component {
                     
                     <Menu.Item key="4" onClick={(param) => this.toPages('attendancemanage')}>
                         <Icon type="form" />
-                        <span>签到管理</span>
+                        <span>考勤管理</span>
                     </Menu.Item>
                     <Menu.Item key="5" onClick={(param) => this.toPages('publicitymanage')}>
                         <Icon type="desktop" />

@@ -12,6 +12,7 @@ class UsersManage extends React.Component {
         return(
             <div>
                 { this.state.userInfo }
+                <div dangerouslySetInnerHTML={{__html: "<p>balabalabalabala.......</p><p>balalababalalaba....</p>"}} />
             </div>
         )
     }
