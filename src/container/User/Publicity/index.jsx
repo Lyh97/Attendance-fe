@@ -2,15 +2,29 @@ import React from 'react';
 // 引入编辑器以及编辑器样式
 import BraftEditor from 'braft-editor'
 import 'braft-editor/dist/index.css'
-import { Input, Button } from 'antd'
+import { Input, Tag, Table, Modal, Button } from 'antd'
 import './index.less'
+
+const { Column } = Table;
 
 class Publicity extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
             publicity: '公示板',
-            editorState: null
+            editorState: null,
+            dataSource: [
+                {
+                    key: '1',
+                    person: '吕嘎BOOM',
+                    time: '2018-3-30',
+                    context: '',
+                    tags: ['nice']
+                }
+            ],
+            dialog: false,
+            tag: '',
+            context: ''
         }
     }
 
@@ -35,10 +49,61 @@ class Publicity extends React.Component {
         this.setState({ editorState })
     }
 
+    handleOk = () => {
+        this.setState({
+            dialog: false,
+        });
+    }
+    
+    handleCancel = () => {
+        this.setState({
+            dialog: false,
+        });
+    }
+
     render () {
         return (
           <React.Fragment>
-            <h3 style={{ margin:"10px", fontWeight:600}}>公示信息</h3>
+            <h2>公示信息</h2>
+            <div className={'public_con'}>
+                <Table dataSource={this.state.dataSource}>
+                    <Column
+                        title="标题"
+                        dataIndex="tags"
+                        key="tags"
+                        render={tags => (
+                            <span>
+                            {tags.map(tag => <Tag color="blue" key={tag}>{tag}</Tag>)}
+                            </span>
+                        )}
+                        onCellClick={(tags) => { 
+                            this.setState({
+                                dialog: !this.state.dialog,
+                                tag: tags['tags'][0],
+                                context: tags['context']
+                            })
+                        }}
+                    />
+                    <Column
+                        title="发布人"
+                        dataIndex="person"
+                        key="person"
+                    />
+                    <Column
+                        title="发布时间"
+                        dataIndex="time"
+                        key="time"
+                    />
+                </Table>
+                <Modal
+                    title={this.state.tag}
+                    visible={this.state.dialog}
+                    onOk={this.handleOk}
+                    onCancel={this.handleCancel}
+                >
+                    <div dangerouslySetInnerHTML={{__html: this.state.context}} />
+                </Modal>
+            </div>
           </React.Fragment>
         )
     }
