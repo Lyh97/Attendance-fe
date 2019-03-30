@@ -93,6 +93,7 @@ class Publicity extends React.Component {
                         title="发布时间"
                         dataIndex="time"
                         key="time"
+                        sorter={(a, b) => a.time>b.time? 1:-1}
                     />
                 </Table>
                 <Modal
