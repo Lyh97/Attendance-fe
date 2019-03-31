@@ -23,7 +23,7 @@ class AttendanceManage extends React.Component {
             let now = this.getToday();
             this.setState({
                 attendanceData: response.data.data,
-                nowDate: now
+                nowDate: param
             })
         })
     }
@@ -59,7 +59,7 @@ class AttendanceManage extends React.Component {
                 <div className="attendance_date_picker">
                     <DatePicker onChange={this.dateChange} defaultValue={moment( date, dateFormat)} format={dateFormat} />
                 </div>
-                <Table tableData={this.state.attendanceData} initData={this.initData.bind(this)}/>
+                <Table tableData={this.state.attendanceData} selectedDate={this.state.nowDate} initData={this.initData.bind(this)}/>
             </div>
         )
     }

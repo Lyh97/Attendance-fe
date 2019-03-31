@@ -23,7 +23,7 @@ ReactDOM.render(
       <Layout>
         <ADSider/>
         <Layout>
-          <Content style={{ background: '#fff', margin: 0, minHeight: 400, overflowY: 'auto' }} >
+          <Content style={{ background: '#fff', margin: 0, minHeight: 400, overflowY: 'auto', margin: '0px' }} >
               <Router history={browserHistory} routes={Routes}/>
           </Content>
         </Layout>

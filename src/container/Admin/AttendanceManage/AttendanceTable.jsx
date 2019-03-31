@@ -65,7 +65,7 @@ class AttendanceTable extends React.Component{
                     message.success('驳回成功', 3);
                 else
                     message.success('恢复成功', 3);
-                this.props.initData();
+                this.props.initData(this.props.selectedDate);
             }
         })
     }

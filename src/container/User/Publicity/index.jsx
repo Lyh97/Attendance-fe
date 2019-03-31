@@ -64,46 +64,48 @@ class Publicity extends React.Component {
     render () {
         return (
           <React.Fragment>
-            <h2>公示信息</h2>
-            <div className={'public_con'}>
-                <Table dataSource={this.state.dataSource}>
-                    <Column
-                        title="标题"
-                        dataIndex="tags"
-                        key="tags"
-                        render={tags => (
-                            <span>
-                            {tags.map(tag => <Tag color="blue" key={tag}>{tag}</Tag>)}
-                            </span>
-                        )}
-                        onCellClick={(tags) => { 
-                            this.setState({
-                                dialog: !this.state.dialog,
-                                tag: tags['tags'][0],
-                                context: tags['context']
-                            })
-                        }}
-                    />
-                    <Column
-                        title="发布人"
-                        dataIndex="person"
-                        key="person"
-                    />
-                    <Column
-                        title="发布时间"
-                        dataIndex="time"
-                        key="time"
-                        sorter={(a, b) => a.time>b.time? 1:-1}
-                    />
-                </Table>
-                <Modal
-                    title={this.state.tag}
-                    visible={this.state.dialog}
-                    onOk={this.handleOk}
-                    onCancel={this.handleCancel}
-                >
-                    <div dangerouslySetInnerHTML={{__html: this.state.context}} />
-                </Modal>
+            <div className='publicty_body'>
+                <h3 className={'public_title'}>
+                    公告板
+                </h3>
+                <div className={'public_con'}>
+                    <Table dataSource={this.state.dataSource} size="middle">
+                        <Column
+                            title="标题"
+                            dataIndex="tags"
+                            key="tags"
+                            render={tags => (
+                                <span style={{ cursor: 'pointer', color:'rgb(21, 41, 226)' }}> {tags} </span>
+                            )}
+                            onCellClick={(tags) => { 
+                                this.setState({
+                                    dialog: !this.state.dialog,
+                                    tag: tags['tags'][0],
+                                    context: tags['context']
+                                })
+                            }}
+                        />
+                        <Column
+                            title="发布人"
+                            dataIndex="person"
+                            key="person"
+                        />
+                        <Column
+                            title="发布时间"
+                            dataIndex="time"
+                            key="time"
+                            sorter={(a, b) => a.time>b.time? 1:-1}
+                        />
+                    </Table>
+                    <Modal
+                        title={this.state.tag}
+                        visible={this.state.dialog}
+                        onOk={this.handleOk}
+                        onCancel={this.handleCancel}
+                    >
+                        <div dangerouslySetInnerHTML={{__html: this.state.context}} />
+                    </Modal>
+                </div>
             </div>
           </React.Fragment>
         )

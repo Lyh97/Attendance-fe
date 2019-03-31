@@ -30,9 +30,9 @@ class UserInfo extends React.Component {
 
     render() {
         return(
-            <div>
-                <h2>职员信息</h2>
-                <Table dataSource={this.state.dataSource}>
+            <div className='userInfo_body'>
+                <h3 className='userInfo_title'>职员信息</h3>
+                <Table dataSource={this.state.dataSource} size="middle">
                     <Column
                         title="工号"
                         dataIndex="number"
