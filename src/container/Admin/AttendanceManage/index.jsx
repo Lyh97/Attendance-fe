@@ -3,7 +3,7 @@ import './index.less'
 import Table from '../../Admin/AttendanceManage/AttendanceTable'
 import { DatePicker } from 'antd';
 import moment from 'moment';
-import axios from 'axios'
+import axios from 'axios';
 
 class AttendanceManage extends React.Component {
     constructor(props) {
