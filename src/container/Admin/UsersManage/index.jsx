@@ -90,7 +90,7 @@ class UsersManage extends React.Component {
             <div>
                 <div>
                     <h3 style={{ margin: '10px 0px 0px 30px', fontSize: '16.38px', fontWeight: 600, float: 'left' }}>{ this.state.userInfo }</h3>
-                    <Button style={{ margin: '10px 30px',float: 'right',zIndex:100 }} type="primary" shape="round" icon="plus" size='default' onClick={() => this.showAddModal()}>添加公告</Button>
+                    <Button style={{ margin: '10px 30px',float: 'right',zIndex:100 }} type="primary" shape="round" icon="plus" size='default' onClick={() => this.showAddModal()}>添加职员</Button>
                 </div>
                 <div className='userManage_table_body'>
                     <Table columns={columns} dataSource={data} />

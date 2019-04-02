@@ -18,19 +18,32 @@ class Attendance extends React.Component {
         }
     }
 
+    getCookie(cname) {
+        var name = cname + "=";
+        var ca = document.cookie.split(';');
+        for(var i=0; i<ca.length; i++) {
+            var c = ca[i];
+            while (c.charAt(0)==' ') c = c.substring(1);
+            if (c.indexOf(name) != -1) return c.substring(name.length, c.length);
+        }
+        return "";
+    }
+
     render() {
         return(
             <div className={'attendance_body'}>
                 <div className={'active_box'}>
                     <Button onClick={() => {
-                        this.state.finished === false ? this.setState({
+                        this.setState({
                             status: '已签到',
                             color: '#87d068',
-                            finished: !this.state.finished
-                        }) : this.setState({
-                            status: '未签到',
-                            color: '#f50',
-                            finished: !this.state.finished
+                        })
+                        axios.get('http://localhost:5002/attendance', { 
+                            params: {
+                                id: this.getCookie('userId')
+                            }
+                        }).then(response => {
+                            console.log(response)
                         })
                     }} className={'active_btn'} shape="circle" icon="dingding"></Button>
                     <div className={'detail_box'}>
