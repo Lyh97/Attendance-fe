@@ -15,13 +15,13 @@ class Publicity extends React.Component {
             publicity: '公示板',
             editorState: null,
             dataSource: [
-                {
-                    key: '1',
-                    author_name: '吕嘎BOOM',
-                    issue_date: '2018-3-30',
-                    content: '',
-                    title: ['nice']
-                }
+                // {
+                //     key: '1',
+                //     author_name: '吕嘎BOOM',
+                //     issue_date: '2018-3-30',
+                //     content: '',
+                //     title: ['nice']
+                // }
             ],
             dialog: false,
             tag: '',
@@ -89,7 +89,7 @@ class Publicity extends React.Component {
                             onCellClick={(title) => { 
                                 this.setState({
                                     dialog: !this.state.dialog,
-                                    tag: title['title'][0],
+                                    tag: title['title'],
                                     context: title['context']
                                 })
                             }}

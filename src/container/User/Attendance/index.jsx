@@ -8,14 +8,41 @@ class Attendance extends React.Component {
         super(props)
         this.state = {
             attendanceData: [],
-            name: '吕噶BOOM',
-            time: '2019-03-29',
+            name: '',
+            time: '',
             // status: '已签到',
-            status: '未签到',
+            status: '',
             // color: '#87d068',
-            color: '#f50',
+            color: '',
             finished: false
         }
+    }
+
+    componentDidMount() {
+        var date = new Date()
+        var time = date.getFullYear() + '-' + (date.getMonth() + 1 >= 10 ? date.getMonth() + 1 : '0' + (date.getMonth() + 1)) + '-' + (date.getDay() >= 10 ? date.getDay() : '0' + date.getDay())
+        var name = this.getCookie('userName')
+        this.setState({
+            time: time,
+            name: name
+        })
+        axios.get('http://localhost:5002/getAttendanceByIdAndDate', {
+            params: {
+                id: this.getCookie('userId')
+            }
+        }).then(response => {
+            if (response.data.status === 301) {
+                this.setState({
+                    status: '已签到',
+                    color: '#87d068'
+                })
+            } else if(response.data.status === 200){
+                this.setState({
+                    status: '未签到',
+                    color: '#f50'
+                })
+            }
+        })
     }
 
     getCookie(cname) {

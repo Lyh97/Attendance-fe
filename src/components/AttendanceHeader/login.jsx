@@ -40,6 +40,7 @@ class Login extends React.Component {
             if(response.data.status === 200) {
                 message.success('登陆成功', 3);
                 this.setCookie('userId', response.data.data.id, 30);
+                this.setCookie('userName', response.data.data.name, 30);
                 this.updateUserInfo(this.getCookie('userId'))
             } else {
                 message.error('登陆失败');
@@ -48,6 +49,7 @@ class Login extends React.Component {
     }
     logout() {
         this.setCookie('userId', '', -1);
+        this.setCookie('userName', '', -1);
         this.setState({
             userInfo: []
         })
