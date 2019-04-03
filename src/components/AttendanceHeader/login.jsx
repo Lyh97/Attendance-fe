@@ -1,6 +1,7 @@
 import React from 'react';
 import './index.less'
 import { Input, Button, Icon, message, Divider } from 'antd';
+import { browserHistory } from 'react-router';
 import axios from 'axios';
 
 class Login extends React.Component {
@@ -39,8 +40,11 @@ class Login extends React.Component {
         }).then((response) => {
             if(response.data.status === 200) {
                 message.success('登陆成功', 3);
-                this.setCookie('userId', response.data.data.id, 30);
+                this.setCookie('userId', response.data.data.id, 1);
+                this.setCookie('userName', response.data.data.name, 1);
+                this.setCookie('role', response.data.data.role, 1);
                 this.updateUserInfo(this.getCookie('userId'))
+                location.reload();
             } else {
                 message.error('登陆失败');
             }
@@ -48,9 +52,12 @@ class Login extends React.Component {
     }
     logout() {
         this.setCookie('userId', '', -1);
+        this.setCookie('userName', '', -1);
+        this.setCookie('role', '', -1);
         this.setState({
             userInfo: []
         })
+        location.reload();
     }
     
     updateUserInfo(userId) {

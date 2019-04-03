@@ -81,8 +81,8 @@ class Publicity extends React.Component {
                             onCellClick={(title) => { 
                                 this.setState({
                                     dialog: !this.state.dialog,
-                                    tag: title['title'][0],
-                                    context: title['context']
+                                    tag: title['title'],
+                                    content: title['content']
                                 })
                             }}
                         />

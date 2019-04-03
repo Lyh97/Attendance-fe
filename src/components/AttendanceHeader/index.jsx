@@ -10,7 +10,6 @@ class AttendanceHeader extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            
         }
     }
     render() {
@@ -21,7 +20,7 @@ class AttendanceHeader extends React.Component {
                 <Row>
                     <Col xs={18}>
                         <div className="logo">
-                            {/* 公司考勤系统 */}
+                            公司考勤系统
                         </div>
                     </Col>
                     <Col xs={6}>
