@@ -4,6 +4,7 @@ import BraftEditor from 'braft-editor'
 import 'braft-editor/dist/index.css'
 import { Input, Tag, Table, Modal, Button } from 'antd'
 import './index.less'
+import axios from 'axios'
 
 const { Column } = Table;
 
@@ -16,15 +17,15 @@ class Publicity extends React.Component {
             dataSource: [
                 {
                     key: '1',
-                    person: '吕嘎BOOM',
-                    time: '2018-3-30',
-                    context: '',
-                    tags: ['nice']
+                    author_name: '吕嘎BOOM',
+                    issue_date: '2018-3-30',
+                    content: '',
+                    title: ['nice']
                 }
             ],
             dialog: false,
             tag: '',
-            context: ''
+            content: ''
         }
     }
 
@@ -35,6 +36,14 @@ class Publicity extends React.Component {
         // this.setState({
         //     editorState: BraftEditor.createEditorState(htmlContent)
         // })
+        axios.get('http://localhost:5002/getPublicty').then(response => {
+            for(var i = 0; i<response.data.data.length; i++) {
+                response.data.data[i]['key'] = i
+            }
+            this.setState({
+                dataSource: response.data.data
+            })
+        })
     }
 
     submitContent = async () => {
@@ -72,29 +81,29 @@ class Publicity extends React.Component {
                     <Table dataSource={this.state.dataSource} size="middle">
                         <Column
                             title="标题"
-                            dataIndex="tags"
-                            key="tags"
-                            render={tags => (
-                                <span style={{ cursor: 'pointer', color:'rgb(21, 41, 226)' }}> {tags} </span>
+                            dataIndex="title"
+                            key="title"
+                            render={title => (
+                                <span style={{ cursor: 'pointer', color:'rgb(21, 41, 226)' }}> {title} </span>
                             )}
-                            onCellClick={(tags) => { 
+                            onCellClick={(title) => { 
                                 this.setState({
                                     dialog: !this.state.dialog,
-                                    tag: tags['tags'][0],
-                                    context: tags['context']
+                                    tag: title['title'][0],
+                                    context: title['context']
                                 })
                             }}
                         />
                         <Column
                             title="发布人"
-                            dataIndex="person"
-                            key="person"
+                            dataIndex="author_name"
+                            key="author_name"
                         />
                         <Column
                             title="发布时间"
-                            dataIndex="time"
-                            key="time"
-                            sorter={(a, b) => a.time>b.time? 1:-1}
+                            dataIndex="issue_date"
+                            key="issue_date"
+                            sorter={(a, b) => a.issue_date>b.issue_date? 1:-1}
                         />
                     </Table>
                     <Modal
@@ -103,7 +112,7 @@ class Publicity extends React.Component {
                         onOk={this.handleOk}
                         onCancel={this.handleCancel}
                     >
-                        <div dangerouslySetInnerHTML={{__html: this.state.context}} />
+                        <div dangerouslySetInnerHTML={{__html: this.state.content}} />
                     </Modal>
                 </div>
             </div>

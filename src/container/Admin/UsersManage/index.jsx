@@ -74,9 +74,9 @@ class UsersManage extends React.Component {
             key: 'action',
             render: (text, record) => (
                 <span>
-                <a onClick={() => this.showUpdateUserInfo(record)}>编辑</a>
-                <Divider type="vertical" />
-                <a href="javascript:;">删除</a>
+                    <a onClick={() => this.showUpdateUserInfo(record)}>编辑</a>
+                    <Divider type="vertical" />
+                    <a href="javascript:;">删除</a>
                 </span>
             ),
         }];

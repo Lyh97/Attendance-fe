@@ -2,20 +2,42 @@ import React from 'react';
 // 引入编辑器以及编辑器样式
 import BraftEditor from 'braft-editor'
 import 'braft-editor/dist/index.css'
-import { Table, Tag, Input, Button, Modal} from 'antd';
+import { Table, Tag, Input, Button, Modal, message } from 'antd';
 import './index.less'
+import axios from 'axios';
 
 class PublicityManage extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
             publicity: '公示板',
-            editorState: null,
+            editorState: '',
             visible: false,
             title: '',
             content: '',
-            addVisible: false
+            addVisible: false,
+            data: []
+            // {
+            //     id: '1',
+            //     title: 'John Brown',
+            //     content: 'New York No. 1 Lake Park',
+            //     issue_date: '2019-03-26',
+            //     status: 1   
+            // }, {
+            //     id: '2',
+            //     title: 'Jim Green',
+            //     content: '<div style="color: red">London No. 1 Lake Park London No.</div>1 Lake Park London No. 1 Lake Park London No. 1 Lake ParkLondon No. <div>1 Lake Park London No.</div>London No. 1 Lake Park London No. \n London No. 1 Lake Park London No. \n London No. 1 Lake Park London No. \n London No. 1 Lake Park London No. \n London No. 1 Lake Park London No. \n London No. 1 Lake Park London No. \n London No. 1 Lake Park London No. \n London No. 1 Lake Park London No. \n London No. 1 Lake Park London No. \n ',
+            //     issue_date: '2019-03-27',
+            //     status: 1
+            // }, {
+            //     id: '3',
+            //     title: 'Joe Black',
+            //     content: 'Sidney No. 1 Lake Park',
+            //     issue_date: '2019-03-28',
+            //     status: 0
+            // }
         }
+        this.submitPublicty = this.submitPublicty.bind(this);
     }
 
     componentDidMount () {
@@ -25,6 +47,20 @@ class PublicityManage extends React.Component {
         // this.setState({
         //     editorState: BraftEditor.createEditorState(htmlContent)
         // })
+        this.init(this.getCookie('userId'))
+    }
+
+    init(id) {
+        axios.get('http://localhost:5002/getPublictyInfoById', { params: {
+            id: this.getCookie('userId')
+        }
+        }).then((response)=> {
+            if(response.data.status === 200) {
+                this.setState({
+                    data: response.data.data,
+                });
+            }
+        })
     }
 
     submitContent = async () => {
@@ -35,8 +71,7 @@ class PublicityManage extends React.Component {
     }
 
     handleEditorChange = (editorState) => {
-        console.log(editorState.toHTML());
-        this.setState({ editorState });
+        this.setState({ editorState: editorState.toHTML() });
     }
 
     showModal = (params) => {
@@ -62,6 +97,38 @@ class PublicityManage extends React.Component {
             visible: false,
             addVisible: false,
         });
+    }
+
+    submitPublicty() {
+        console.log(this.state.editorState);
+        console.log(document.getElementById("publictyTitle").value);
+
+        axios.post('http://localhost:5002/addPublictyInfo', {
+            author_id: this.getCookie('userId'),
+            author_name:  this.getCookie('userName'),
+            content: this.state.editorState,
+            title: document.getElementById("publictyTitle").value
+        }).then((response)=> {
+            if(response.data.status === 200) {
+                message.success('添加公告成功', 3);
+                this.setState({
+                    addVisible: false,
+                });
+                this.init(this.getCookie('userId'));
+            }
+        })
+    }
+
+    //获取cookie
+    getCookie(cname) {
+        var name = cname + "=";
+        var ca = document.cookie.split(';');
+        for(var i=0; i<ca.length; i++) {
+            var c = ca[i];
+            while (c.charAt(0)==' ') c = c.substring(1);
+            if (c.indexOf(name) != -1) return c.substring(name.length, c.length);
+        }
+        return "";
     }
 
     handleCancel = () => {
@@ -114,26 +181,6 @@ class PublicityManage extends React.Component {
             ),
             width: 150
         }];
-          
-        const data = [{
-            id: '1',
-            title: 'John Brown',
-            content: 'New York No. 1 Lake Park',
-            issue_date: '2019-03-26',
-            status: 1   
-        }, {
-            id: '2',
-            title: 'Jim Green',
-            content: '<div style="color: red">London No. 1 Lake Park London No.</div>1 Lake Park London No. 1 Lake Park London No. 1 Lake ParkLondon No. <div>1 Lake Park London No.</div>London No. 1 Lake Park London No. \n London No. 1 Lake Park London No. \n London No. 1 Lake Park London No. \n London No. 1 Lake Park London No. \n London No. 1 Lake Park London No. \n London No. 1 Lake Park London No. \n London No. 1 Lake Park London No. \n London No. 1 Lake Park London No. \n London No. 1 Lake Park London No. \n ',
-            issue_date: '2019-03-27',
-            status: 1
-        }, {
-            id: '3',
-            title: 'Joe Black',
-            content: 'Sidney No. 1 Lake Park',
-            issue_date: '2019-03-28',
-            status: 0
-        }];
 
         return (
           <React.Fragment>
@@ -147,11 +194,11 @@ class PublicityManage extends React.Component {
             <Modal width= '800px' style={{ top: 20 }} title= {this.state.title} visible={this.state.visible} onOk={this.handleOk} onCancel={this.handleCancel}>
                 <div dangerouslySetInnerHTML={{ __html: this.state.content }} />
             </Modal>
-            <Modal width= '1000px' style={{ top: 20 }} title= '添加公告' visible={this.state.addVisible} onOk={this.handleOk} onCancel={this.handleCancel}>
+            <Modal width= '1000px' style={{ top: 20 }} title= '添加公告' visible={this.state.addVisible} onOk={this.submitPublicty} onCancel={this.handleCancel}>
                 <div className='addPublicty_body'>
                     <div className={'addPublic_title'}>
                         <h4>标题:</h4>
-                        <Input placeholder="填写标题" />
+                        <Input placeholder="填写标题" id="publictyTitle"/>
                     </div>
                     <div className={'editor_class'}>
                         <h4>内容:</h4>
