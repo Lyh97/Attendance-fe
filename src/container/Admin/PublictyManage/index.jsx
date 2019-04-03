@@ -17,25 +17,6 @@ class PublicityManage extends React.Component {
             content: '',
             addVisible: false,
             data: []
-            // {
-            //     id: '1',
-            //     title: 'John Brown',
-            //     content: 'New York No. 1 Lake Park',
-            //     issue_date: '2019-03-26',
-            //     status: 1   
-            // }, {
-            //     id: '2',
-            //     title: 'Jim Green',
-            //     content: '<div style="color: red">London No. 1 Lake Park London No.</div>1 Lake Park London No. 1 Lake Park London No. 1 Lake ParkLondon No. <div>1 Lake Park London No.</div>London No. 1 Lake Park London No. \n London No. 1 Lake Park London No. \n London No. 1 Lake Park London No. \n London No. 1 Lake Park London No. \n London No. 1 Lake Park London No. \n London No. 1 Lake Park London No. \n London No. 1 Lake Park London No. \n London No. 1 Lake Park London No. \n London No. 1 Lake Park London No. \n ',
-            //     issue_date: '2019-03-27',
-            //     status: 1
-            // }, {
-            //     id: '3',
-            //     title: 'Joe Black',
-            //     content: 'Sidney No. 1 Lake Park',
-            //     issue_date: '2019-03-28',
-            //     status: 0
-            // }
         }
         this.submitPublicty = this.submitPublicty.bind(this);
     }
@@ -52,7 +33,7 @@ class PublicityManage extends React.Component {
 
     init(id) {
         axios.get('http://localhost:5002/getPublictyInfoById', { params: {
-            id: this.getCookie('userId')
+            userId: this.getCookie('userId')
         }
         }).then((response)=> {
             if(response.data.status === 200) {
@@ -67,7 +48,6 @@ class PublicityManage extends React.Component {
         // 在编辑器获得焦点时按下ctrl+s会执行此方法
         // 编辑器内容提交到服务端之前，可直接调用editorState.toHTML()来获取HTML格式的内容
         const htmlContent = this.state.editorState.toHTML()
-        console.log(htmlContent)
     }
 
     handleEditorChange = (editorState) => {
@@ -75,7 +55,6 @@ class PublicityManage extends React.Component {
     }
 
     showModal = (params) => {
-        console.log(params)
         this.setState({
             visible: true,
             title: params.title,
@@ -83,13 +62,21 @@ class PublicityManage extends React.Component {
         });
     }
 
-    updatePublictyStatus(params) {
-        console.log(params);
+    updatePublictyStatus(params, status) {
+        axios.get('http://localhost:5002/updatePublictyStatusById', { params: {
+            id: params.id,
+            status: status
+        }}).then((response) => {
+            this.init(this.getCookie('userId'))
+        })
     }
 
     deletePublicty(params) {
-        console.log('delete');
-        console.log(params);
+        axios.get('http://localhost:5002/deletePublictyById', { params: {
+            id: params.id
+        }}).then((response) => {
+            this.init(this.getCookie('userId'))
+        })
     }
 
     handleOk = () => {
@@ -100,9 +87,6 @@ class PublicityManage extends React.Component {
     }
 
     submitPublicty() {
-        console.log(this.state.editorState);
-        console.log(document.getElementById("publictyTitle").value);
-
         axios.post('http://localhost:5002/addPublictyInfo', {
             author_id: this.getCookie('userId'),
             author_name:  this.getCookie('userName'),
@@ -144,15 +128,14 @@ class PublicityManage extends React.Component {
             title: '标题',
             dataIndex: 'title',
             key: 'title',
-            className: 'publicty_table_content',
-            width: 300,
+            width: 200,
             render: (text, record) => <a onClick={() => this.showModal(record)}>{text}</a>,
         }, {
             title: '内容',
             dataIndex: 'content',
             key: 'content',
             className: 'publicty_table_content',
-            width: 500
+            width: 400
         }, {
             title: '发布时间',
             dataIndex: 'issue_date',
@@ -175,7 +158,7 @@ class PublicityManage extends React.Component {
             key: 'action',
             render: (text, record) => (
                 <span>
-                    <a onClick={() => this.updatePublictyStatus(record)}> 撤回 {record.name}</a> |
+                    <a onClick={() => this.updatePublictyStatus(record, record.status === 1 ? 0:1 )}> {record.status === 1? '撤回':'发布'}</a> |
                     <a onClick={() => this.deletePublicty(record)}> 删除 {record.name}</a>
                 </span>
             ),
@@ -189,12 +172,12 @@ class PublicityManage extends React.Component {
                 <Button style={{ margin: '20px 30px',float: 'right',zIndex:100 }} type="primary" shape="round" icon="plus" size='default' onClick={() => this.showAddModal()}>添加公告</Button>
             </div>
             <div className='publicty_manage_table'>
-                <Table columns={columns} dataSource={data} size='middle'/>
+                <Table columns={columns} dataSource={this.state.data} size='middle'/>
             </div>
-            <Modal width= '800px' style={{ top: 20 }} title= {this.state.title} visible={this.state.visible} onOk={this.handleOk} onCancel={this.handleCancel}>
+            <Modal width= '800px' style={{ top: 40 }} title= {this.state.title} visible={this.state.visible} onOk={this.handleOk} onCancel={this.handleCancel}>
                 <div dangerouslySetInnerHTML={{ __html: this.state.content }} />
             </Modal>
-            <Modal width= '1000px' style={{ top: 20 }} title= '添加公告' visible={this.state.addVisible} onOk={this.submitPublicty} onCancel={this.handleCancel}>
+            <Modal width= '1000px' style={{ top: 40 }} title= '添加公告' visible={this.state.addVisible} onOk={this.submitPublicty} onCancel={this.handleCancel}>
                 <div className='addPublicty_body'>
                     <div className={'addPublic_title'}>
                         <h4>标题:</h4>

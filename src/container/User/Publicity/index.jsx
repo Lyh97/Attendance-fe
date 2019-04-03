@@ -14,15 +14,7 @@ class Publicity extends React.Component {
         this.state = {
             publicity: '公示板',
             editorState: null,
-            dataSource: [
-                {
-                    key: '1',
-                    author_name: '吕嘎BOOM',
-                    issue_date: '2018-3-30',
-                    content: '',
-                    title: ['nice']
-                }
-            ],
+            dataSource: [],
             dialog: false,
             tag: '',
             content: ''
@@ -106,7 +98,8 @@ class Publicity extends React.Component {
                             sorter={(a, b) => a.issue_date>b.issue_date? 1:-1}
                         />
                     </Table>
-                    <Modal
+                    <Modal 
+                        width= '800px' style={{ top: 40 }} 
                         title={this.state.tag}
                         visible={this.state.dialog}
                         onOk={this.handleOk}
