@@ -57,6 +57,9 @@ class Login extends React.Component {
         this.setState({
             userInfo: []
         })
+        browserHistory.push({
+            pathname: 'attendance'
+        })
         location.reload();
     }
     

@@ -17,6 +17,7 @@ browserHistory.listen((location) => {
         window.scrollTo(0, 0);
     });
 });
+
 ReactDOM.render(
     <Layout className={"sys_body"}>
       <ADHeader />

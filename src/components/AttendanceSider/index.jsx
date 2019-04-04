@@ -12,6 +12,12 @@ class AttendanceSider extends React.Component {
         };
     }
 
+    componentDidMount() {
+        browserHistory.push({
+            pathname: 'attendance'
+        })
+    }
+
     onCollapse(collapsed) {
         this.setState({ collapsed });
     }
