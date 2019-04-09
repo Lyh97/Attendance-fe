@@ -2,7 +2,7 @@ import React from 'react';
 // 引入编辑器以及编辑器样式
 import BraftEditor from 'braft-editor'
 import 'braft-editor/dist/index.css'
-import { Table, Tag, Input, Button, Modal, message } from 'antd';
+import { Table, Tag, Input, Button, Modal, message, Comment, List } from 'antd';
 import './index.less'
 import axios from 'axios';
 
@@ -16,7 +16,8 @@ class PublicityManage extends React.Component {
             title: '',
             content: '',
             addVisible: false,
-            data: []
+            data: [],
+            comments: []
         }
         this.submitPublicty = this.submitPublicty.bind(this);
     }
@@ -55,11 +56,17 @@ class PublicityManage extends React.Component {
     }
 
     showModal = (params) => {
-        this.setState({
-            visible: true,
-            title: params.title,
-            content: params.content
-        });
+        axios.get('http://localhost:5002/getCommentByPublictyId', { params: {
+            publictyId: params.id
+        }}).then((response) => {
+            this.setState({
+                comments: response.data.data,
+                visible: true,
+                title: params.title,
+                content: params.content
+            });
+        })
+        
     }
 
     updatePublictyStatus(params, status) {
@@ -176,6 +183,14 @@ class PublicityManage extends React.Component {
             </div>
             <Modal width= '800px' style={{ top: 40 }} title= {this.state.title} visible={this.state.visible} onOk={this.handleOk} onCancel={this.handleCancel}>
                 <div dangerouslySetInnerHTML={{ __html: this.state.content }} />
+                {this.state.comments.length > 0 && 
+                    <List
+                        dataSource={this.state.comments}
+                        header={`${this.state.comments.length} ${this.state.comments.length > 1 ? 'replies' : 'reply'}`}
+                        itemLayout="horizontal"
+                        renderItem={props => <Comment {...props} />}
+                    />
+                }
             </Modal>
             <Modal width= '1000px' style={{ top: 40 }} title= '添加公告' visible={this.state.addVisible} onOk={this.submitPublicty} onCancel={this.handleCancel}>
                 <div className='addPublicty_body'>

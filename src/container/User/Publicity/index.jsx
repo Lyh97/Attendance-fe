@@ -1,6 +1,7 @@
 import React from 'react';
 // 引入编辑器以及编辑器样式
 import BraftEditor from 'braft-editor'
+import PublicComment from '../../User/Publicity/PublicComment';
 import 'braft-editor/dist/index.css'
 import { Input, Tag, Table, Modal, Button } from 'antd'
 import './index.less'
@@ -17,7 +18,9 @@ class Publicity extends React.Component {
             dataSource: [],
             dialog: false,
             tag: '',
-            content: ''
+            content: '',
+            comments: [],
+            publicId: 0
         }
     }
 
@@ -62,6 +65,20 @@ class Publicity extends React.Component {
         });
     }
 
+    getCommentById(id) {
+        axios.get('http://localhost:5002/getCommentByPublictyId', {
+            params: {
+                publictyId: id
+            }
+        }).then(response => {
+            this.setState({
+                publicId: id,
+                comments: response.data.data
+            })
+            this.forceUpdate();
+        })
+    }
+
     render () {
         return (
           <React.Fragment>
@@ -78,7 +95,8 @@ class Publicity extends React.Component {
                             render={title => (
                                 <span style={{ cursor: 'pointer', color:'rgb(21, 41, 226)' }}> {title} </span>
                             )}
-                            onCellClick={(title) => { 
+                            onCellClick={(title) => {
+                                this.getCommentById(title.id) 
                                 this.setState({
                                     dialog: !this.state.dialog,
                                     tag: title['title'],
@@ -106,6 +124,7 @@ class Publicity extends React.Component {
                         onCancel={this.handleCancel}
                     >
                         <div dangerouslySetInnerHTML={{__html: this.state.content}} />
+                        <PublicComment comments={this.state.comments} publicId={ this.state.publicId }/>
                     </Modal>
                 </div>
             </div>
