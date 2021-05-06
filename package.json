@@ -40,7 +40,7 @@
     "echarts-for-react": "^2.0.13",
     "eslint-plugin-css-modules": "^2.7.5",
     "html-webpack-plugin": "^3.2.0",
-    "json": "^9.0.6",
+    "json": "^10.0.0",
     "less": "^3.8.0",
     "less-loader": "^4.1.0",
     "moment": "2",
